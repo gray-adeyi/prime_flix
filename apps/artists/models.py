@@ -1,38 +1,49 @@
 from django.db import models
 
+
 class Gender(models.TextChoices):
-    Male="male"
-    Female="female"
-    NonBinary="non-binary"
+    Male = "male"
+    Female = "female"
+    NonBinary = "non-binary"
+
 
 class MortalityStatus(models.TextChoice):
-    Living="living"
-    Deceased="deceased"
+    Living = "living"
+    Deceased = "deceased"
+
 
 class Artist(models.Model):
     name = models.CharField(max_length=127)
-    picture= models.ImageField()
-    age=modeks.PositiveIntegerField()
-    gendermodels.CharField(max_length=15,choices=MortalityStatus.choices)
-    nationality=models.JSONField(default=list)
-    debut=models.DateField
-    mortality=models.CharField(max_length=15, choices=MortalityStatus.choices)
-    bio=models.TextField()
+    picture = models.ImageField()
+    age = models.PositiveIntegerField()
+    gender = models.CharField(max_length=15, choices=MortalityStatus.choices)
+    nationality = models.JSONField(default=list)
+    debut = models.DateField
+    mortality = models.CharField(max_length=15, choices=MortalityStatus.choices)
+    bio = models.TextField()
 
     def __str__(self):
         return self.name
 
+
 class SocialNetworks(models.IntegerChoices):
-    Facebook=0
-    Instagram=1
-    Twitter=2
-    TikTok=3
-    Snapchat=4
+    Facebook = 0
+    Instagram = 1
+    Twitter = 2
+    TikTok = 3
+    Snapchat = 4
+
 
 class SocialAccount(models.Model):
-    account
-    link
+    artist = models.ForeignKey(
+        to="artists.Artist", on_delete=models.CASCADE, related_name="socials"
+    )
+    account = models.PositiveIntegerField(choices=SocialNetworks.choices)
+    link = models.URLField()
+
 
 class Picture(models.Model):
-    artist
-    caption
+    artist = models.ForeignKey(
+        to="artists.Artist", on_delete=models.CASCADE, related_name="pictures"
+    )
+    caption = models.CharField(max_length="128", blank=True)

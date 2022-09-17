@@ -8,6 +8,7 @@ django = "*"
 djangorestframework = "*"
 wheel = "*"
 pillow = "*"
+python-dotenv = "*"
 
 [dev-packages]
 black = "*"

@@ -73,6 +73,9 @@ class BaseMovie(models.Model):
     release_date = models.DateField()
     synopsis = models.TextField(blank=True)
     cast = models.ManyToManyField(to="artists.Artist")
+    timestamp = models.DateTimeField(
+        auto_now_add=True, help_text="the date and time the movie was created"
+    )
 
     class Meta:
         abstract = True
@@ -127,8 +130,12 @@ class Video(models.Model):
 
 
 class MovieVideo(Video):
-    movie = models.OneToOneField(to="movies.Movie", related_name="video", on_delete=models.CASCADE)
+    movie = models.OneToOneField(
+        to="movies.Movie", related_name="video", on_delete=models.CASCADE
+    )
 
 
 class SeriesVideo(Video):
-    series = models.ForeignKey(to="movies.Series", related_name="videos", on_delete=models.CASCADE)
+    series = models.ForeignKey(
+        to="movies.Series", related_name="videos", on_delete=models.CASCADE
+    )

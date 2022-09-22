@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # 3rd party apps
     "rest_framework",
+    "drf_yasg",
     # project apps
     "apps.artists",
     "apps.users",
@@ -134,3 +135,5 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
+
+API_VERSION = "v1"

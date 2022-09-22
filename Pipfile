@@ -5,10 +5,11 @@ name = "pypi"
 
 [packages]
 django = "*"
-djangorestframework = "*"
+djangorestframework = "==3.12"
 wheel = "*"
 pillow = "*"
 python-dotenv = "*"
+drf-yasg = "*"
 
 [dev-packages]
 black = "*"

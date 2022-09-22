@@ -11,30 +11,31 @@ class Genres(models.IntegerChoices):
     Adventure = 6
     Thriller = 7
     Fantasy = 9
-    Western = 9
-    Documentary = 9
-    Animation = 10
-    Crime = 11
-    RomanticComedy = 12
-    Musical = 13
-    FilmNoir = 14
-    WarFilm = 15
-    Mystery = 16
-    Silent = 17
-    Epic = 18
-    Biopic = 19
-    Sports = 20
-    Disaster = 21
-    Docufiction = 22
+    Western = 10
+    Documentary = 11
+    Animation = 12
+    Crime = 13
+    RomanticComedy = 14
+    Musical = 15
+    FilmNoir = 16
+    WarFilm = 17
+    Mystery = 18
+    Silent = 19
+    Epic = 20
+    Biopic = 21
+    Sports = 22
+    Disaster = 23
+    Docufiction = 24
 
 
 class Genre(models.Model):
-    name = models.PrimaryIntegerField(choices=Genres.choices, unique=True)
-    description = models.TextField()
+    name = models.PositiveIntegerField(
+        choices=Genres.choices, unique=True, help_text="the name of the movie genre"
+    )
+    description = models.TextField(blank=True)
 
-    def __str__(self):
-
-        return self.name
+    def __str__(self) -> str:
+        return str(self.name)
 
 
 class CountryMovieIndustries(models.IntegerChoices):
@@ -45,20 +46,22 @@ class CountryMovieIndustries(models.IntegerChoices):
     Aussiewood = 4
     Lollywood = 5
     Bollywood = 6
-    Kollywood = 7
-    Dhallywood = 8
-    Swahiliwood = 9
-    Riverwood = 10
-    Chinawood = 11
+    Dhallywood = 7
+    Swahiliwood = 8
+    Riverwood = 9
+    Chinawood = 10
 
 
 class CountryMovieIndustry(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(
+        max_length=128,
+        help_text="the category a move belongs to based on it's country of origin",
+    )
     nickname = models.PositiveIntegerField(choices=CountryMovieIndustries.choices)
-    description = models.TextField()
+    description = models.TextField(blank=True)
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return str(self.name)
 
 
 class BaseMovie(models.Model):
@@ -69,6 +72,7 @@ class BaseMovie(models.Model):
     )
     release_date = models.DateField()
     synopsis = models.TextField(blank=True)
+    cast = models.ManyToManyField(to="artists.Artist")
 
     class Meta:
         abstract = True
@@ -79,11 +83,21 @@ class Movie(BaseMovie):
 
 
 class Series(BaseMovie):
-    ...
+    class Meta:
+        verbose_name_plural = "series"
 
 
-class Episode:
-    ...
+class Season(models.Model):
+    series = models.ForeignKey(to="movies.Series", on_delete=models.CASCADE)
+    season = models.PositiveIntegerField(default=1)
+
+
+class Episode(models.Model):
+    series = models.ForeignKey(to="movies.Season", on_delete=models.CASCADE)
+    number = models.PositiveIntegerField(
+        verbose_name="episode number", help_text="the episode's number"
+    )
+    summary = models.TextField(blank=True)
 
 
 class VideoFileFormats(models.TextChoices):
@@ -102,8 +116,19 @@ class VideoFileFormats(models.TextChoices):
 
 class Video(models.Model):
     poster = models.ImageField(blank=True)
-    file = models.CharField()
+    file = models.FileField()
     format = models.CharField(max_length=15, choices=VideoFileFormats.choices)
     length = models.DecimalField(
         max_digits=8, decimal_places=2, help_text="the duration of the video"
     )
+
+    class Meta:
+        abstract = True
+
+
+class MovieVideo(Video):
+    movie = models.OneToOneField(to="movies.Movie", related_name="video", on_delete=models.CASCADE)
+
+
+class SeriesVideo(Video):
+    series = models.ForeignKey(to="movies.Series", related_name="videos", on_delete=models.CASCADE)

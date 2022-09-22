@@ -7,7 +7,7 @@ class Gender(models.TextChoices):
     NonBinary = "non-binary"
 
 
-class MortalityStatus(models.TextChoice):
+class MortalityStatus(models.TextChoices):
     Living = "living"
     Deceased = "deceased"
 
@@ -46,4 +46,4 @@ class Picture(models.Model):
     artist = models.ForeignKey(
         to="artists.Artist", on_delete=models.CASCADE, related_name="pictures"
     )
-    caption = models.CharField(max_length="128", blank=True)
+    caption = models.CharField(max_length=128, blank=True)

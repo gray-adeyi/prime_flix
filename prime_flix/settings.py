@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG",True))
+DEBUG = bool(os.environ.get("DEBUG", True))
 
 ALLOWED_HOSTS = []
 
@@ -42,7 +42,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # project apps
+    "apps.artists",
     "apps.users",
+    "apps.movies",
+    "apps.movie_requests",
 ]
 
 MIDDLEWARE = [
